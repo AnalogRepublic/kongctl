@@ -1,6 +1,10 @@
-hash: 0f501563d9c0429b9dd2f79ace111b7f4b5d21a2d550a08db4c20d0dda8e8902
-updated: 2017-09-26T21:56:53.592749247+01:00
+hash: 2fedf72ac9cae30b4e7547a2ba8c8dcb792041db3bf1aea6768f5e1aded98c43
+updated: 2017-09-26T22:24:40.439744901+01:00
 imports:
+- name: github.com/go-yaml/yaml
+  version: eb3733d160e74a9c7e442f435eb3bea458e1d19f
+- name: github.com/kylelemons/godebug
+  version: d65d576e9348f5982d7f6d83682b694e731a45c6
 - name: github.com/urfave/cli
   version: cfb38830724cc34fedffe9a2a29fb54fa9169cd1
 testImports: []

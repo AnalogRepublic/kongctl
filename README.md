@@ -11,3 +11,4 @@ CLI tool to version & manage your Kong APIs, Plugins and Consumers. Supporting m
  - [] Keep track of the Kong hosts as "contexts" and allow switching
  - [] Document tools api & options
  - [] Produce pretty landing page & branding
+ - [] Add to Homebrew

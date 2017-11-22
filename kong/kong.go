@@ -14,7 +14,7 @@ type Kong struct {
 	Host   string
 }
 
-func NewKong(host string, errors chan error) *Kong {
+func NewKong(host string) (*Kong, error) {
 	kong := &Kong{
 		Client: newHttpClient(),
 		Host:   host,
@@ -23,10 +23,10 @@ func NewKong(host string, errors chan error) *Kong {
 	_, err := kong.Client.Get(kong.Host)
 
 	if err != nil {
-		errors <- err
+		return &Kong{}, err
 	}
 
-	return kong
+	return kong, nil
 }
 
 func newHttpClient() *http.Client {
@@ -36,5 +36,12 @@ func newHttpClient() *http.Client {
 }
 
 func (k *Kong) Plugins() ([]*Plugin, error) {
+	plugins := []*Plugin{}
 	resp, err := k.Client.Get(k.Host + "/plugins")
+
+	if err != nil {
+		return plugins, err
+	}
+
+	return plugins, nil
 }

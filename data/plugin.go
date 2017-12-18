@@ -3,12 +3,12 @@ package data
 // Plugin represent the Plugin object we'll
 // get back from the Kong API whenever we make a request.
 type Plugin struct {
-	ID        string
-	ApiID     string
-	Name      string
-	Config    map[string]string
-	Enabled   bool
-	CreatedAt int
+	ID        string                 `json:"id"`
+	ApiID     string                 `json:"api_id"`
+	Name      string                 `json:"name"`
+	Config    map[string]interface{} `json:"config"`
+	Enabled   bool                   `json:"enabled"`
+	CreatedAt int                    `json:"created_at"`
 }
 
 // PluginListResponse is an object which represents the

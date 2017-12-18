@@ -1,0 +1,36 @@
+version: "2"
+
+services:
+  # Our Kong service
+  kong:
+    image: kong:0.10.3
+    container_name: kongctl_kong
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "7946:7946"
+      - "7946:7946/udp"
+    depends_on:
+      - "kong-database"
+    environment:
+      KONG_PG_HOST: "kong-database"
+      KONG_PG_USER: "kong"
+      KONG_PG_PASS: "kong"
+      KONG_PG_DATABASE: "kong"
+      KONG_DATABASE: "postgres"
+      COMPOSE_PROJECT_NAME: "kongctl"
+
+  # Kongs Database
+  kong-database:
+    image: postgres:9.4
+    container_name: kongclt_kong_database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "kong"
+      POSTGRES_PASS: "kong"
+      POSTGRES_DB: "kong"
+      COMPOSE_PROJECT_NAME: "kongctl"
+    logging:
+      driver: none

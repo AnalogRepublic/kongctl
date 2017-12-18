@@ -52,7 +52,6 @@ func (k *Kong) Plugins() *PluginHandler {
 // our Kong service to ensure that the host is reachable.
 func (k *Kong) Ping() error {
 	_, err := k.Client.Get("/").Request()
-
 	return err
 }
 

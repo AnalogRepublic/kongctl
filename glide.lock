@@ -1,5 +1,5 @@
-hash: 6878d4beb8ae54a2bfc5774ab677a5b95444f1918f84bd30519242a2ded0e194
-updated: 2017-12-18T16:53:40.250460763Z
+hash: 8652ce7ae80b5ed4a716752980f00a145daadc4802588789aec7fdeaba8761f5
+updated: 2017-12-18T18:13:21.033877333Z
 imports:
 - name: github.com/dghubble/sling
   version: eb56e89ac5088bebb12eef3cb4b293300f43608b
@@ -11,6 +11,10 @@ imports:
   - query
 - name: github.com/kylelemons/godebug
   version: d65d576e9348f5982d7f6d83682b694e731a45c6
+- name: github.com/mattn/go-runewidth
+  version: 9e777a8366cce605130a531d2cd6363d07ad7317
+- name: github.com/olekukonko/tablewriter
+  version: 65fec0d89a572b4367094e2058d3ebe667de3b60
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/stretchr/testify

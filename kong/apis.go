@@ -55,3 +55,63 @@ func (ah *ApiHandler) Retrieve(params *data.ApiRequestParams) (*data.Api, error)
 
 	return api, nil
 }
+
+// Add will create a new api resource on Kong & Handle any conflicts.
+func (ah *ApiHandler) Add(api *data.Api) (*data.Api, error) {
+	respApi := &data.Api{}
+
+	_, err := ah.Kong.Client.Post(apisRootPath).BodyJSON(api).ReceiveSuccess(respApi)
+
+	if err != nil {
+		return respApi, err
+	}
+
+	return respApi, nil
+}
+
+// Update will make a PUT request to update an existing
+// api stored in the Kong service
+func (ah *ApiHandler) Update(params *data.ApiRequestParams, updatedData *data.Api) (*data.Api, error) {
+	respApi := &data.Api{}
+
+	identifier, err := params.Identifier()
+
+	if err != nil {
+		return respApi, errors.Wrap(err, "You must provide an ID or Name to update an Api")
+	}
+
+	path := fmt.Sprintf("%s/%s", apisRootPath, identifier)
+
+	_, err = ah.Kong.Client.Patch(path).BodyJSON(updatedData).ReceiveSuccess(respApi)
+
+	if err != nil {
+		return respApi, err
+	}
+
+	return respApi, nil
+}
+
+// Delete will make a DELETE request to remove an api from the Kong service
+func (ah *ApiHandler) Delete(params *data.ApiRequestParams) error {
+	identifier, err := params.Identifier()
+
+	if err != nil {
+		return errors.Wrap(err, "You must provide an ID or Name to update an Api")
+	}
+
+	path := fmt.Sprintf("%s/%s", apisRootPath, identifier)
+
+	request, err := ah.Kong.Client.Delete(path).Request()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = ah.Kong.Client.Do(request, nil, nil)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

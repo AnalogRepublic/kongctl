@@ -1,5 +1,9 @@
 package data
 
+import (
+	"errors"
+)
+
 // Api represent the Api object we'll
 // get back from the Kong API whenever we make a request.
 type Api struct {
@@ -37,4 +41,18 @@ type ApiRequestParams struct {
 	Retries     int    `url:"retries,omitempty"`
 	Size        int    `url:"size_id,omitempty"`
 	Offset      int    `url:"offset_id,omitempty"`
+}
+
+// Identifier should grab the identifier we've passed into
+// our request params, favouring the ID over the name.
+func (arp *ApiRequestParams) Identifier() (string, error) {
+	if arp.ID != "" {
+		return arp.ID, nil
+	}
+
+	if arp.Name != "" {
+		return arp.Name, nil
+	}
+
+	return "", errors.New("You must provide an ID or Name in the ApiRequestParams")
 }

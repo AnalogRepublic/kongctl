@@ -1,8 +1,11 @@
 package kong
 
 import (
+	"fmt"
+
 	"github.com/analogrepublic/kongctl/data"
 	"github.com/dghubble/sling"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -30,4 +33,25 @@ func (ah *ApiHandler) List(params *data.ApiRequestParams) (*data.ApiList, error)
 	}
 
 	return apiList, nil
+}
+
+// Retrieve will make a GET request to fetch a single Api by Name or
+// ID which will be provided in the params
+func (ah *ApiHandler) Retrieve(params *data.ApiRequestParams) (*data.Api, error) {
+	api := &data.Api{}
+	identifier, err := params.Identifier()
+
+	if err != nil {
+		return api, errors.Wrap(err, "You must provide an ID or Name to retrieve an Api")
+	}
+
+	path := fmt.Sprintf("%s/%s", apisRootPath, identifier)
+
+	_, err = ah.Kong.Client.Get(path).ReceiveSuccess(api)
+
+	if err != nil {
+		return api, err
+	}
+
+	return api, nil
 }

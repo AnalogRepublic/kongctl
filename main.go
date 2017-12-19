@@ -13,7 +13,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-var api *kong.Kong
+var kongApi *kong.Kong
 
 const (
 	version     = "0.1.0"
@@ -35,7 +35,7 @@ func main() {
 	app.Version = version
 	app.EnableBashCompletion = true
 
-	api, err = kong.NewKong(c.GetString("host"), c)
+	kongApi, err = kong.NewKong(c.GetString("host"), c)
 
 	if err != nil {
 		fmt.Println(errors.Wrap(err, "Unable to communicate with the Kong service"))
@@ -75,19 +75,58 @@ func main() {
 
 func apiListCommand(c *cli.Context) error {
 	params := &data.ApiRequestParams{}
-	apiList, err := api.Apis().List(params)
-
-	if err != nil {
-		return cli.NewExitError(errors.Wrap(err, "Unable to fetch the list of apis"), 1)
-	}
-
 	table := tablewriter.NewWriter(os.Stdout)
 
-	fmt.Printf("List of apis, showing %d of %d \n", len(apiList.Data), apiList.Total)
-	table.SetHeader([]string{"ID", "Name", "Upstream URL"})
+	// Style the table
+	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
+	table.SetCenterSeparator("|")
 
-	for _, api := range apiList.Data {
-		table.Append([]string{api.ID, api.Name, api.UpstreamUrl})
+	// By default we'll not specify a name to find.
+	name := ""
+
+	// If we've provided an argument, assume
+	// that the first one is the name.
+	if c.NArg() > 0 {
+		name = c.Args().Get(0)
+	}
+
+	// If we've not passed in a name as an argument,
+	// we will just fetch a list of all apis.
+	if name == "" {
+		apiList, err := kongApi.Apis().List(params)
+
+		if err != nil {
+			return cli.NewExitError(errors.Wrap(err, "Unable to fetch the list of apis"), 1)
+		}
+
+		table.SetCaption(true, fmt.Sprintf("List of apis, showing %d of %d \n", len(apiList.Data), apiList.Total))
+		table.SetHeader([]string{"ID", "Name", "Upstream URL"})
+
+		for _, api := range apiList.Data {
+			table.Append([]string{api.ID, api.Name, api.UpstreamUrl})
+		}
+	} else {
+		params.ID = name
+		apiItem, err := kongApi.Apis().Retrieve(params)
+
+		if err != nil {
+			return cli.NewExitError(errors.Wrap(err, fmt.Sprintf("Unable to fetch the api with the ID %s", name)), 1)
+		}
+
+		if apiItem.ID == "" {
+			return cli.NewExitError(errors.New("Could not find api with the requested ID"), 1)
+		}
+
+		table.SetHeader([]string{"Key", "Value"})
+
+		data := [][]string{
+			{"ID", apiItem.ID},
+			{"Name", apiItem.Name},
+		}
+
+		table.SetAutoMergeCells(true)
+		table.SetRowLine(true)
+		table.AppendBulk(data)
 	}
 
 	table.Render()
@@ -97,7 +136,7 @@ func apiListCommand(c *cli.Context) error {
 
 func pluginListCommand(c *cli.Context) error {
 	params := &data.PluginRequestParams{}
-	plugins, err := api.Plugins().List(params)
+	plugins, err := kongApi.Plugins().List(params)
 
 	if err != nil {
 		return cli.NewExitError(errors.Wrap(err, "Unable to fetch the list of plugins"), 1)
@@ -113,7 +152,10 @@ func pluginListCommand(c *cli.Context) error {
 		return true
 	})
 
-	fmt.Printf("List of plugins, showing %d of %d \n", len(pluginsList), plugins.Total)
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+	table.SetCenterSeparator("|")
+
+	table.SetCaption(true, fmt.Sprintf("List of plugins, showing %d of %d \n", len(pluginsList), plugins.Total))
 	table.SetHeader([]string{"ID", "API ID", "Name", "Enabled"})
 
 	for _, plugin := range pluginsList {

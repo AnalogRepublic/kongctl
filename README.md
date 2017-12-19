@@ -4,6 +4,10 @@
 
 CLI tool to version & manage your Kong APIs, Plugins and Consumers. Supporting multiple contexts, exports and diffs.
 
+## Configuration
+
+Copy the `example.kongctl.yaml` file into the root of your project and rename it to `kongctl.yaml`. You can also place this file in `$HOME/.kongctl/` or `/etc/kongctl/` if you want to keep your kongctl settings global.
+
 ## Roadmap
  - [x] Connect to Kong services
  - [ ] Export Kong apis, plugins and settings into versionable .yaml files

@@ -6,6 +6,7 @@ import (
 
 	"github.com/dghubble/sling"
 	"github.com/pkg/errors"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -19,14 +20,16 @@ const (
 // store any state information about our
 // client.
 type Kong struct {
+	Config *viper.Viper
 	Client *sling.Sling
 	Host   string
 }
 
 // NewKong should return a new instance of Kong which we
 // can use to interact with the API of the service.
-func NewKong(host string) (*Kong, error) {
+func NewKong(host string, config *viper.Viper) (*Kong, error) {
 	kong := &Kong{
+		Config: config,
 		Client: newHttpClient(host),
 		Host:   host,
 	}
@@ -51,8 +54,26 @@ func (k *Kong) Plugins() *PluginHandler {
 // Ping makes a single GET request to the base host of
 // our Kong service to ensure that the host is reachable.
 func (k *Kong) Ping() error {
-	_, err := k.Client.Get("/").Request()
-	return err
+	req, err := k.Client.Get("/").Request()
+
+	if err != nil {
+		return err
+	}
+
+	var success interface{}
+	var fail interface{}
+
+	_, err = k.Client.Do(req, success, fail)
+
+	if err != nil {
+		return err
+	}
+
+	if fail != nil {
+		return errors.New("The request did not return with a 2XX response")
+	}
+
+	return nil
 }
 
 // newHttpClient returns a Sling instance which we're going

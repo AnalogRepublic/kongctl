@@ -5,25 +5,36 @@ import (
 	"os"
 	"sort"
 
+	"github.com/analogrepublic/kongctl/config"
 	"github.com/analogrepublic/kongctl/kong"
 	"github.com/olekukonko/tablewriter"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 )
 
+const (
+	version     = "0.1.0"
+	name        = "kongctl"
+	description = "Kong management tool"
+)
+
 func main() {
+	config.Init()
+
+	c := config.GetConfig()
+
 	app := cli.NewApp()
 
-	kong, err := kong.NewKong("http://testing.kongctl.io:8001")
+	app.Name = name
+	app.Usage = description
+	app.Version = version
+
+	kong, err := kong.NewKong(c.GetString("host"), c)
 
 	if err != nil {
 		fmt.Println(errors.Wrap(err, "Unable to communicate with the Kong service"))
 		os.Exit(1)
 	}
-
-	app.Name = "kongctl"
-	app.Usage = "Kong management tool"
-	app.Version = "0.1.0"
 
 	app.Commands = []cli.Command{
 		{

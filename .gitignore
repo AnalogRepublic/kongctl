@@ -16,5 +16,6 @@
 .glide/
 vendor/
 
-# Don't commit the build
+# Don't commit the build or any testing files
 kongctl
+kongctl.yaml

@@ -1,28 +1,71 @@
-hash: 8652ce7ae80b5ed4a716752980f00a145daadc4802588789aec7fdeaba8761f5
-updated: 2017-12-18T18:13:21.033877333Z
+hash: bcd841ad315fcc0eae64935178c1368083bdcc43d2d4fd845a906ca1ca382b21
+updated: 2017-12-19T09:55:46.337082562Z
 imports:
 - name: github.com/dghubble/sling
   version: eb56e89ac5088bebb12eef3cb4b293300f43608b
+- name: github.com/fsnotify/fsnotify
+  version: 4da3e2cfbabc9f751898f250b49f2439785783a1
 - name: github.com/go-yaml/yaml
   version: eb3733d160e74a9c7e442f435eb3bea458e1d19f
 - name: github.com/google/go-querystring
   version: 53e6ce116135b80d037921a7fdd5138cf32d7a8a
   subpackages:
   - query
+- name: github.com/hashicorp/hcl
+  version: 23c074d0eceb2b8a5bfdbb271ab780cde70f05a8
+  subpackages:
+  - hcl/ast
+  - hcl/parser
+  - hcl/printer
+  - hcl/scanner
+  - hcl/strconv
+  - hcl/token
+  - json/parser
+  - json/scanner
+  - json/token
 - name: github.com/kylelemons/godebug
   version: d65d576e9348f5982d7f6d83682b694e731a45c6
+- name: github.com/magiconair/properties
+  version: 49d762b9817ba1c2e9d0c69183c2b4a8b8f1d934
 - name: github.com/mattn/go-runewidth
   version: 9e777a8366cce605130a531d2cd6363d07ad7317
+- name: github.com/mitchellh/mapstructure
+  version: 06020f85339e21b2478f756a78e295255ffa4d6a
 - name: github.com/olekukonko/tablewriter
   version: 65fec0d89a572b4367094e2058d3ebe667de3b60
+- name: github.com/pelletier/go-toml
+  version: 4e9e0ee19b60b13eb79915933f44d8ed5f268bdd
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/spf13/afero
+  version: 8d919cbe7e2627e417f3e45c3c0e489a5b7e2536
+  subpackages:
+  - mem
+- name: github.com/spf13/cast
+  version: acbeb36b902d72a7a4c18e8f3241075e7ab763e4
+- name: github.com/spf13/jwalterweatherman
+  version: 12bd96e66386c1960ab0f74ced1362f66f552f7b
+- name: github.com/spf13/pflag
+  version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
+- name: github.com/spf13/viper
+  version: 25b30aa063fc18e48662b86996252eabdcf2f0c7
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
   subpackages:
   - assert
 - name: github.com/urfave/cli
   version: cfb38830724cc34fedffe9a2a29fb54fa9169cd1
+- name: golang.org/x/sys
+  version: 571f7bbbe08da2a8955aed9d4db316e78630e9a3
+  subpackages:
+  - unix
+- name: golang.org/x/text
+  version: eb22672bea55af56d225d4e35405f4d2e9f062a0
+  subpackages:
+  - transform
+  - unicode/norm
+- name: gopkg.in/yaml.v2
+  version: 287cf08546ab5e7e37d55a84f7ed3fd1db036de5
 testImports:
 - name: github.com/davecgh/go-spew
   version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9

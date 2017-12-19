@@ -79,7 +79,7 @@ func pluginListCommand(c *cli.Context) error {
 	table := tablewriter.NewWriter(os.Stdout)
 
 	pluginsList := plugins.FilterData(func(p data.Plugin) bool {
-		if c.Bool("enabled") {
+		if c.GlobalBool("enabled") {
 			return p.Enabled
 		}
 

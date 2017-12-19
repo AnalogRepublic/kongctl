@@ -57,12 +57,12 @@ func main() {
 				{
 					Name:   "plugins",
 					Usage:  "List plugins",
-					Action: pluginListCommand,
+					Action: describePluginCommand,
 				},
 				{
 					Name:   "apis",
 					Usage:  "List apis",
-					Action: apiListCommand,
+					Action: describeApiCommand,
 				},
 			},
 		},
@@ -73,7 +73,7 @@ func main() {
 	app.Run(os.Args)
 }
 
-func apiListCommand(c *cli.Context) error {
+func describeApiCommand(c *cli.Context) error {
 	params := &data.ApiRequestParams{}
 	table := tablewriter.NewWriter(os.Stdout)
 
@@ -134,7 +134,7 @@ func apiListCommand(c *cli.Context) error {
 	return nil
 }
 
-func pluginListCommand(c *cli.Context) error {
+func describePluginCommand(c *cli.Context) error {
 	params := &data.PluginRequestParams{}
 	plugins, err := kongApi.Plugins().List(params)
 

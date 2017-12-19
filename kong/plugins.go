@@ -20,10 +20,10 @@ type PluginHandler struct {
 // List will make a GET request with our request params and
 // return a PluginList which contains the number of plugins,
 // a list of the plugins fetched and a reference to the next page.
-func (ph *PluginHandler) List() (*data.PluginList, error) {
+func (ph *PluginHandler) List(params *data.PluginRequestParams) (*data.PluginList, error) {
 	pluginList := &data.PluginList{}
 
-	_, err := ph.Kong.Client.Get(pluginsRootPath).ReceiveSuccess(pluginList)
+	_, err := ph.Kong.Client.Get(pluginsRootPath).QueryStruct(params).ReceiveSuccess(pluginList)
 
 	if err != nil {
 		return pluginList, err

@@ -19,6 +19,20 @@ type PluginList struct {
 	Next  string    `json:"next"`
 }
 
+// FilterData allows you to provide a filter callback to fetch
+// a new filtered sub-set of the Data
+func (pl *PluginList) FilterData(f func(Plugin) bool) []Plugin {
+	newList := make([]Plugin, 0)
+
+	for _, plugin := range pl.Data {
+		if f(*plugin) {
+			newList = append(newList, *plugin)
+		}
+	}
+
+	return newList
+}
+
 // PluginRequestParams allows us to pass in a query
 // string of parameters to some of the plugin requests.
 type PluginRequestParams struct {

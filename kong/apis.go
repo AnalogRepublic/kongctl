@@ -96,7 +96,7 @@ func (ah *ApiHandler) Delete(params *data.ApiRequestParams) error {
 	identifier, err := params.Identifier()
 
 	if err != nil {
-		return errors.Wrap(err, "You must provide an ID or Name to update an Api")
+		return errors.Wrap(err, "You must provide an ID or Name to delete an Api")
 	}
 
 	path := fmt.Sprintf("%s/%s", apisRootPath, identifier)

@@ -44,8 +44,80 @@ func main() {
 
 	app.Commands = []cli.Command{
 		{
+			Name:    "apply",
+			Aliases: []string{"upload", "set", "sync"},
+			Usage:   "Apply a yaml file to a Kong service",
+			Action: func(c *cli.Context) error {
+				fmt.Println("Should be applyin' shit here")
+
+				// Specify the file we're reading
+				yamlFile := &data.UnparsedYamlFile{
+					Name: "test_files/file.yaml",
+				}
+
+				// Convert it to a struct
+				parsedFile, err := yamlFile.Unmarshal()
+
+				if err != nil {
+					return cli.NewExitError(err, 1)
+				}
+
+				// Grab the first Api from that struct
+				testApiItem := parsedFile.Apis[0]
+
+				// Create it
+				createdApiItem, err := kongApi.Apis().Add(testApiItem)
+
+				if err != nil {
+					return cli.NewExitError(err, 1)
+				}
+
+				if createdApiItem.ID == "" {
+					// We didn't get a new one, so it must exist, let's update it instead
+					updatedApiItem, err := kongApi.Apis().Update(&data.ApiRequestParams{Name: testApiItem.Name}, testApiItem)
+
+					testApiItem = updatedApiItem
+
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
+				} else {
+					testApiItem = createdApiItem
+				}
+
+				// Create a fake parsed file with the api we've just got back
+				fakeParsedFile := &data.ParsedYamlFile{
+					Apis: []*data.Api{
+						testApiItem,
+					},
+					Plugins: []*data.Plugin{},
+				}
+
+				// Convert our fake parsed object to a string
+				fakeYamlOutput, err := fakeParsedFile.Marshal()
+
+				if err != nil {
+					return cli.NewExitError(err, 1)
+				}
+
+				fmt.Println(fakeYamlOutput)
+
+				return nil
+			},
+		},
+		{
+			Name:    "export",
+			Aliases: []string{"download", "fetch", "grab"},
+			Usage:   "Export resources to a yaml file",
+			Action: func(c *cli.Context) error {
+				fmt.Println("Should be exportin' shit here")
+
+				return nil
+			},
+		},
+		{
 			Name:    "describe",
-			Aliases: []string{"desc"},
+			Aliases: []string{"desc", "inspect"},
 			Usage:   "Describe a resource",
 			Flags: []cli.Flag{
 				cli.BoolFlag{

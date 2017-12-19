@@ -7,21 +7,22 @@ import (
 // Api represent the Api object we'll
 // get back from the Kong API whenever we make a request.
 type Api struct {
-	ID                     string      `json:"id,omitempty"`
-	Hosts                  interface{} `json:"hosts,omitempty"`
-	Methods                interface{} `json:"methods,omitempty"`
-	Uris                   interface{} `json:"uris,omitempty"`
-	Name                   string      `json:"name,omitempty"`
-	HttpIfTerminated       bool        `json:"http_if_terminated,omitempty"`
-	HttpsOnly              bool        `json:"https_only,omitempty"`
-	PreserveHost           bool        `json:"preserve_host,omitempty"`
-	StripUri               bool        `json:"strip_uri,omitempty"`
-	UpstreamConnectTimeout int         `json:"upstream_connect_timeout,omitempty"`
-	UpstreamReadTimeout    int         `json:"upstream_read_timeout,omitempty"`
-	UpstreamSendTimeout    int         `json:"upstream_send_timeout,omitempty"`
-	UpstreamUrl            string      `json:"upstream_url,omitempty"`
-	Retries                int         `json:"retries,omitempty"`
-	CreatedAt              int         `json:"created_at,omitempty"`
+	ID                     string      `json:"id,omitempty" yaml:"id,omitempty"`
+	Hosts                  interface{} `json:"hosts,omitempty" yaml:"hosts,omitempty"`
+	Methods                interface{} `json:"methods,omitempty" yaml:"methods,omitempty"`
+	Uris                   interface{} `json:"uris,omitempty" yaml:"uris,omitempty"`
+	Name                   string      `json:"name,omitempty" yaml:"name,omitempty"`
+	HttpIfTerminated       bool        `json:"http_if_terminated,omitempty" yaml:"http_if_terminated,omitempty"`
+	HttpsOnly              bool        `json:"https_only,omitempty" yaml:"https_only,omitempty"`
+	PreserveHost           bool        `json:"preserve_host,omitempty" yaml:"preserve_host,omitempty"`
+	StripUri               bool        `json:"strip_uri,omitempty" yaml:"strip_uri,omitempty"`
+	UpstreamConnectTimeout int         `json:"upstream_connect_timeout,omitempty" yaml:"upstream_connect_timeout,omitempty"`
+	UpstreamReadTimeout    int         `json:"upstream_read_timeout,omitempty" yaml:"upstream_read_timeout,omitempty"`
+	UpstreamSendTimeout    int         `json:"upstream_send_timeout,omitempty" yaml:"upstream_send_timeout,omitempty"`
+	UpstreamUrl            string      `json:"upstream_url,omitempty" yaml:"upstream_url,omitempty"`
+	Retries                int         `json:"retries,omitempty" yaml:"retries,omitempty"`
+	CreatedAt              int         `json:"created_at,omitempty" yaml:"created_at,omitempty"`
+	Plugins                []*Plugin   `json:"-" yaml:"plugins,omitempty"`
 }
 
 // ApiList is an object which represents the

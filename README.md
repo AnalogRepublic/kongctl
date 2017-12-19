@@ -30,7 +30,7 @@ kongctl describe [resource] [id/name]
 
 // Export command should export a resource by it's ID and optionally allow for
 // manually outputting the export filename.
-kongctl export [resource] [id] -o [filename]
+kongctl export -o [filename] [resource] [id]
 
 // Allow the user to export the entire Kong
 // service to a single file.

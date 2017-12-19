@@ -59,6 +59,11 @@ func main() {
 					Usage:  "List plugins",
 					Action: pluginListCommand,
 				},
+				{
+					Name:   "apis",
+					Usage:  "List apis",
+					Action: apiListCommand,
+				},
 			},
 		},
 	}
@@ -66,6 +71,28 @@ func main() {
 	sort.Sort(cli.CommandsByName(app.Commands))
 
 	app.Run(os.Args)
+}
+
+func apiListCommand(c *cli.Context) error {
+	params := &data.ApiRequestParams{}
+	apiList, err := api.Apis().List(params)
+
+	if err != nil {
+		return cli.NewExitError(errors.Wrap(err, "Unable to fetch the list of apis"), 1)
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+
+	fmt.Printf("List of apis, showing %d of %d \n", len(apiList.Data), apiList.Total)
+	table.SetHeader([]string{"ID", "Name", "Upstream URL"})
+
+	for _, api := range apiList.Data {
+		table.Append([]string{api.ID, api.Name, api.UpstreamUrl})
+	}
+
+	table.Render()
+
+	return nil
 }
 
 func pluginListCommand(c *cli.Context) error {

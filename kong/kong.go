@@ -51,6 +51,16 @@ func (k *Kong) Plugins() *PluginHandler {
 	}
 }
 
+// Apis returns the api handler for the Kong client.
+// This should be a handler which can interact with a running
+// Kong API.
+func (k *Kong) Apis() *ApiHandler {
+	return &ApiHandler{
+		Client: k.Client,
+		Kong:   k,
+	}
+}
+
 // Ping makes a single GET request to the base host of
 // our Kong service to ensure that the host is reachable.
 func (k *Kong) Ping() error {

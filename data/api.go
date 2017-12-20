@@ -12,10 +12,10 @@ type Api struct {
 	Methods                interface{} `json:"methods,omitempty" yaml:"methods,omitempty"`
 	Uris                   interface{} `json:"uris,omitempty" yaml:"uris,omitempty"`
 	Name                   string      `json:"name,omitempty" yaml:"name,omitempty"`
-	HttpIfTerminated       bool        `json:"http_if_terminated,omitempty" yaml:"http_if_terminated,omitempty"`
-	HttpsOnly              bool        `json:"https_only,omitempty" yaml:"https_only,omitempty"`
-	PreserveHost           bool        `json:"preserve_host,omitempty" yaml:"preserve_host,omitempty"`
-	StripUri               bool        `json:"strip_uri,omitempty" yaml:"strip_uri,omitempty"`
+	HttpIfTerminated       bool        `json:"http_if_terminated" yaml:"http_if_terminated,omitempty"`
+	HttpsOnly              bool        `json:"https_only" yaml:"https_only,omitempty"`
+	PreserveHost           bool        `json:"preserve_host" yaml:"preserve_host,omitempty"`
+	StripUri               bool        `json:"strip_uri" yaml:"strip_uri,omitempty"`
 	UpstreamConnectTimeout int         `json:"upstream_connect_timeout,omitempty" yaml:"upstream_connect_timeout,omitempty"`
 	UpstreamReadTimeout    int         `json:"upstream_read_timeout,omitempty" yaml:"upstream_read_timeout,omitempty"`
 	UpstreamSendTimeout    int         `json:"upstream_send_timeout,omitempty" yaml:"upstream_send_timeout,omitempty"`

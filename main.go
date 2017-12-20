@@ -48,8 +48,6 @@ func main() {
 			Aliases: []string{"upload", "set", "sync"},
 			Usage:   "Apply a yaml file to a Kong service",
 			Action: func(c *cli.Context) error {
-				fmt.Println("Should be applyin' shit here")
-
 				// Specify the file we're reading
 				yamlFile := &data.UnparsedYamlFile{
 					Name: "test_files/file.yaml",
@@ -62,45 +60,73 @@ func main() {
 					return cli.NewExitError(err, 1)
 				}
 
-				// Grab the first Api from that struct
-				testApiItem := parsedFile.Apis[0]
-
-				// Create it
-				createdApiItem, err := kongApi.Apis().Add(testApiItem)
+				remoteApis, err := kongApi.Apis().List(&data.ApiRequestParams{})
 
 				if err != nil {
 					return cli.NewExitError(err, 1)
 				}
 
-				if createdApiItem.ID == "" {
-					// We didn't get a new one, so it must exist, let's update it instead
-					updatedApiItem, err := kongApi.Apis().Update(&data.ApiRequestParams{Name: testApiItem.Name}, testApiItem)
+				remotePlugins, err := kongApi.Plugins().List(&data.PluginRequestParams{})
 
-					testApiItem = updatedApiItem
+				if err != nil {
+					return cli.NewExitError(err, 1)
+				}
+
+				// Create a parsed file with the apis we've just got back from
+				// the remote kong service
+				remoteParsedFile := &data.ParsedYamlFile{
+					Apis:    remoteApis.Data,
+					Plugins: remotePlugins.Data,
+				}
+
+				diff, err := parsedFile.Diff(remoteParsedFile)
+
+				if err != nil {
+					return cli.NewExitError(err, 1)
+				}
+
+				for _, addition := range diff.Additions {
+					apiAddition := addition.(data.Api)
+
+					fmt.Printf("Adding api '%s'\n", apiAddition.Name)
+
+					result, err := kongApi.Apis().Add(&apiAddition)
 
 					if err != nil {
 						return cli.NewExitError(err, 1)
 					}
-				} else {
-					testApiItem = createdApiItem
+
+					if result.ID == "" {
+						return cli.NewExitError(errors.New(fmt.Sprintf("Failed creating api endpoint %s", apiAddition.Name)), 1)
+					}
 				}
 
-				// Create a fake parsed file with the api we've just got back
-				fakeParsedFile := &data.ParsedYamlFile{
-					Apis: []*data.Api{
-						testApiItem,
-					},
-					Plugins: []*data.Plugin{},
+				for _, updatePair := range diff.Updates {
+					update := updatePair.([]interface{})[0]
+					apiUpdate := update.(data.Api)
+
+					fmt.Printf("Updating api '%s'\n", apiUpdate.Name)
+
+					result, err := kongApi.Apis().Update(&data.ApiRequestParams{Name: apiUpdate.Name}, &apiUpdate)
+
+					if err != nil {
+						return cli.NewExitError(err, 1)
+					}
+
+					if result.ID == "" {
+						return cli.NewExitError(errors.New(fmt.Sprintf("Failed updating api endpoint %s", apiUpdate.Name)), 1)
+					}
 				}
 
-				// Convert our fake parsed object to a string
-				fakeYamlOutput, err := fakeParsedFile.Marshal()
+				for _, deletion := range diff.Deletions {
+					apiDeletion := deletion.(data.Api)
+					fmt.Printf("Removing api '%s'\n", apiDeletion.Name)
+					err := kongApi.Apis().Delete(&data.ApiRequestParams{Name: apiDeletion.Name})
 
-				if err != nil {
-					return cli.NewExitError(err, 1)
+					if err != nil {
+						return cli.NewExitError(errors.New(fmt.Sprintf("Failed removing api endpoint %s", apiDeletion.Name)), 1)
+					}
 				}
-
-				fmt.Println(fakeYamlOutput)
 
 				return nil
 			},

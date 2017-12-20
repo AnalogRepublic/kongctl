@@ -1,0 +1,20 @@
+apis:
+  # The first example endpoint
+  - name: Endpoint-1
+    upstream_url: http://endpoint.kongctl.io
+    uris:
+      - /testing-1
+    strip_uri: true
+
+  # The second example endpoint
+  - name: Endpoint-2
+    upstream_url: http://endpoint.kongctl.io
+    uris:
+      - /testing-2
+    strip_uri: false
+    methods:
+      - "GET"
+      - "POST"
+    preserve_host: true
+    retries: 10
+    https_only: true

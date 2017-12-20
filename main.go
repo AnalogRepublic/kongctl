@@ -389,5 +389,25 @@ func contextSwitchCommand(c *cli.Context) error {
 }
 
 func contextListCommand(c *cli.Context) error {
+	table := tablewriter.NewWriter(os.Stdout)
+
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+	table.SetCenterSeparator("|")
+
+	table.SetCaption(true, "List of available contexts")
+	table.SetHeader([]string{"Name", "Host", "Current"})
+
+	for name, context := range kongApi.Config.FileData.Contexts {
+		current := ""
+
+		if name == kongApi.Config.FileData.CurrentContext {
+			current = "yes"
+		}
+
+		table.Append([]string{name, context.Host, current})
+	}
+
+	table.Render()
+
 	return nil
 }

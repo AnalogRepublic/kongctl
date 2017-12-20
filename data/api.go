@@ -7,21 +7,21 @@ import (
 // Api represent the Api object we'll
 // get back from the Kong API whenever we make a request.
 type Api struct {
-	ID                     string      `json:"id,omitempty" yaml:"id,omitempty"`
+	ID                     string      `json:"-" yaml:"-"`
+	Name                   string      `json:"name,omitempty" yaml:"name,omitempty"`
+	Uris                   interface{} `json:"uris,omitempty" yaml:"uris,omitempty"`
 	Hosts                  interface{} `json:"hosts,omitempty" yaml:"hosts,omitempty"`
 	Methods                interface{} `json:"methods,omitempty" yaml:"methods,omitempty"`
-	Uris                   interface{} `json:"uris,omitempty" yaml:"uris,omitempty"`
-	Name                   string      `json:"name,omitempty" yaml:"name,omitempty"`
-	HttpIfTerminated       bool        `json:"http_if_terminated" yaml:"http_if_terminated,omitempty"`
-	HttpsOnly              bool        `json:"https_only" yaml:"https_only,omitempty"`
 	PreserveHost           bool        `json:"preserve_host" yaml:"preserve_host,omitempty"`
 	StripUri               bool        `json:"strip_uri" yaml:"strip_uri,omitempty"`
+	UpstreamUrl            string      `json:"upstream_url,omitempty" yaml:"upstream_url,omitempty"`
 	UpstreamConnectTimeout int         `json:"upstream_connect_timeout,omitempty" yaml:"upstream_connect_timeout,omitempty"`
 	UpstreamReadTimeout    int         `json:"upstream_read_timeout,omitempty" yaml:"upstream_read_timeout,omitempty"`
 	UpstreamSendTimeout    int         `json:"upstream_send_timeout,omitempty" yaml:"upstream_send_timeout,omitempty"`
-	UpstreamUrl            string      `json:"upstream_url,omitempty" yaml:"upstream_url,omitempty"`
+	HttpIfTerminated       bool        `json:"http_if_terminated" yaml:"http_if_terminated,omitempty"`
+	HttpsOnly              bool        `json:"https_only" yaml:"https_only,omitempty"`
 	Retries                int         `json:"retries,omitempty" yaml:"retries,omitempty"`
-	CreatedAt              int         `json:"created_at,omitempty" yaml:"created_at,omitempty"`
+	CreatedAt              int         `json:"-" yaml:"-"`
 	Plugins                []*Plugin   `json:"-" yaml:"plugins,omitempty"`
 }
 

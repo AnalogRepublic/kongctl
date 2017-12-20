@@ -1,0 +1,24 @@
+apis:
+- name: Endpoint-1
+  uris:
+  - /testing-1
+  strip_uri: true
+  upstream_url: http://endpoint.kongctl.io
+  upstream_connect_timeout: 60000
+  upstream_read_timeout: 60000
+  upstream_send_timeout: 60000
+  retries: 5
+- name: Endpoint-2
+  uris:
+  - /testing-2
+  methods:
+  - GET
+  - POST
+  preserve_host: true
+  upstream_url: http://endpoint.kongctl.io
+  upstream_connect_timeout: 60000
+  upstream_read_timeout: 60000
+  upstream_send_timeout: 60000
+  https_only: true
+  retries: 10
+plugins: []

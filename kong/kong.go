@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/analogrepublic/kongctl/config"
 	"github.com/dghubble/sling"
 	"github.com/pkg/errors"
-	"github.com/spf13/viper"
 )
 
 const (
@@ -20,16 +20,16 @@ const (
 // store any state information about our
 // client.
 type Kong struct {
-	Config *viper.Viper
+	Config *config.Config
 	Client *sling.Sling
 	Host   string
 }
 
 // NewKong should return a new instance of Kong which we
 // can use to interact with the API of the service.
-func NewKong(host string, config *viper.Viper) (*Kong, error) {
+func NewKong(host string, c *config.Config) (*Kong, error) {
 	kong := &Kong{
-		Config: config,
+		Config: c,
 		Client: newHttpClient(host),
 		Host:   host,
 	}

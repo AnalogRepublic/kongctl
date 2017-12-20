@@ -3,13 +3,13 @@ package data
 // Plugin represent the Plugin object we'll
 // get back from the Kong API whenever we make a request.
 type Plugin struct {
-	ID         string      `json:"id,omitempty" yaml:"id,omitempty"`
+	ID         string      `json:"-" yaml:"-"`
+	Name       string      `json:"name,omitempty" yaml:"name,omitempty"`
 	ApiID      string      `json:"api_id,omitempty" yaml:"api_id,omitempty"`
 	ConsumerID string      `json:"consumer_id,omitempty" yaml:"consumer_id,omitempty"`
-	Name       string      `json:"name,omitempty" yaml:"name,omitempty"`
 	Config     interface{} `json:"config,omitempty" yaml:"config,omitempty"`
 	Enabled    bool        `json:"enabled" yaml:"enabled,omitempty"`
-	CreatedAt  int         `json:"created_at,omitempty" yaml:"created_at,omitempty"`
+	CreatedAt  int         `json:"-" yaml:"-"`
 }
 
 // PluginList is an object which represents the

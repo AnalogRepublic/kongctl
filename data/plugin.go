@@ -3,7 +3,7 @@ package data
 // Plugin represent the Plugin object we'll
 // get back from the Kong API whenever we make a request.
 type Plugin struct {
-	ID         string      `json:"-" yaml:"-"`
+	ID         string      `json:"id,omitempty" yaml:"-"`
 	Name       string      `json:"name,omitempty" yaml:"name,omitempty"`
 	ApiID      string      `json:"api_id,omitempty" yaml:"api_id,omitempty"`
 	ConsumerID string      `json:"consumer_id,omitempty" yaml:"consumer_id,omitempty"`

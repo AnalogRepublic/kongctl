@@ -7,7 +7,7 @@ import (
 // Api represent the Api object we'll
 // get back from the Kong API whenever we make a request.
 type Api struct {
-	ID                     string      `json:"-" yaml:"-"`
+	ID                     string      `json:"id,omitempty" yaml:"-"`
 	Name                   string      `json:"name,omitempty" yaml:"name,omitempty"`
 	Uris                   interface{} `json:"uris,omitempty" yaml:"uris,omitempty"`
 	Hosts                  interface{} `json:"hosts,omitempty" yaml:"hosts,omitempty"`
@@ -21,7 +21,7 @@ type Api struct {
 	HttpIfTerminated       bool        `json:"http_if_terminated" yaml:"http_if_terminated,omitempty"`
 	HttpsOnly              bool        `json:"https_only" yaml:"https_only,omitempty"`
 	Retries                int         `json:"retries,omitempty" yaml:"retries,omitempty"`
-	CreatedAt              int         `json:"-" yaml:"-"`
+	CreatedAt              int         `json:"created_at,omitempty" yaml:"-"`
 	Plugins                []*Plugin   `json:"-" yaml:"plugins,omitempty"`
 }
 

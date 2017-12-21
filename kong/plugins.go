@@ -66,7 +66,7 @@ func (ph *PluginHandler) Add(plugin *data.Plugin) (*data.Plugin, error) {
 	// If we're only applying it to an api, use the apis
 	// plugin endpoint
 	if plugin.ApiID != "" && plugin.ConsumerID == "" {
-		path = fmt.Sprintf("%s/%s/%s", apisRootPath, plugin.ConsumerID, path)
+		path = fmt.Sprintf("%s/%s/%s", apisRootPath, plugin.ApiID, path)
 	}
 
 	_, err := ph.Kong.Client.Post(path).BodyJSON(plugin).ReceiveSuccess(respPlugin)

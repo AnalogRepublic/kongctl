@@ -1,1 +1,4 @@
-host: "http://localhost:8001"
+current_context: default
+contexts:
+  default:
+    host: http://127.0.0.1:8001

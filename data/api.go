@@ -22,7 +22,6 @@ type Api struct {
 	HttpsOnly              bool        `json:"https_only" yaml:"https_only,omitempty"`
 	Retries                int         `json:"retries,omitempty" yaml:"retries,omitempty"`
 	CreatedAt              int         `json:"created_at,omitempty" yaml:"-"`
-	Plugins                []*Plugin   `json:"-" yaml:"plugins,omitempty"`
 }
 
 // ApiList is an object which represents the

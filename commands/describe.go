@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/analogrepublic/kongctl/data"
-	"github.com/analogrepublic/kongctl/kong"
 	"github.com/olekukonko/tablewriter"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
@@ -33,12 +32,6 @@ var Describe = cli.Command{
 			Action: describeApiCommand,
 		},
 	},
-}
-
-var kongApi *kong.Kong
-
-func SetKongApi(k *kong.Kong) {
-	kongApi = k
 }
 
 func describeApiCommand(c *cli.Context) error {

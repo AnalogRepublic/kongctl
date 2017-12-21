@@ -18,3 +18,7 @@ apis:
     preserve_host: true
     retries: 10
     https_only: true
+
+plugins:
+  - name: acl
+    api_id: Endpoint-1

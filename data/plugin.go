@@ -1,5 +1,7 @@
 package data
 
+import "errors"
+
 // Plugin represent the Plugin object we'll
 // get back from the Kong API whenever we make a request.
 type Plugin struct {
@@ -43,4 +45,18 @@ type PluginRequestParams struct {
 	ConsumerID string `url:"consumer_id,omitempty"`
 	Size       int    `url:"size_id,omitempty"`
 	Offset     int    `url:"offset_id,omitempty"`
+}
+
+// Identifier should grab the identifier we've passed into
+// our request params, favouring the ID over the name.
+func (prp *PluginRequestParams) Identifier() (string, error) {
+	if prp.ID != "" {
+		return prp.ID, nil
+	}
+
+	if prp.Name != "" {
+		return prp.Name, nil
+	}
+
+	return "", errors.New("You must provide an ID or Name in the PluginRequestParams")
 }

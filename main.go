@@ -25,7 +25,12 @@ const (
 func main() {
 	var err error
 
-	config.Init()
+	err := config.Init()
+
+	if err != nil {
+		fmt.Println(errors.Wrap(err, "Unable to read config file"))
+		os.Exit(1)
+	}
 
 	c := config.GetConfig()
 

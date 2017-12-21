@@ -1,40 +1,55 @@
 package kong
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 	"time"
 
+	"github.com/analogrepublic/kongctl/config"
 	"github.com/analogrepublic/kongctl/data"
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
+var conf *config.Config
 var seed = strconv.Itoa(int(time.Now().Unix()))
 
 var testApiObject *data.Api
 
-func config() *viper.Viper {
-	v := viper.New()
+func getConfig() *config.Config {
+	if conf == nil {
+		err := config.Init()
 
-	v.Set("host", "http://testing.kongctl.io:8001")
+		if err != nil {
+			panic(fmt.Sprintf("Unable to load configuration: %s", err))
+		}
 
-	return v
+		conf = config.GetConfig()
+	}
+
+	return conf
+}
+
+func getKong() (*Kong, error) {
+	c := getConfig()
+	context, err := c.GetCurrentContext()
+
+	if err != nil {
+		panic("Unable to determine context to use, please check your config file")
+	}
+
+	return NewKong(context.Host, c)
 }
 
 func TestNewKong(t *testing.T) {
-	c := config()
-
-	kong, err := NewKong(c.GetString("host"), c)
+	kongApi, err := getKong()
 
 	assert.Nil(t, err)
-	assert.NotNil(t, kong)
+	assert.NotNil(t, kongApi)
 }
 
 func TestApisAdd(t *testing.T) {
-	c := config()
-
-	kong, err := NewKong(c.GetString("host"), c)
+	kongApi, err := getKong()
 
 	assert.Nil(t, err)
 
@@ -47,7 +62,7 @@ func TestApisAdd(t *testing.T) {
 		UpstreamUrl: "https://google.com",
 	}
 
-	api, err := kong.Apis().Add(apiItem)
+	api, err := kongApi.Apis().Add(apiItem)
 
 	assert.Nil(t, err)
 	assert.NotEqual(t, api.ID, "")
@@ -57,26 +72,22 @@ func TestApisAdd(t *testing.T) {
 }
 
 func TestApisList(t *testing.T) {
-	c := config()
-
-	kong, err := NewKong(c.GetString("host"), c)
+	kongApi, err := getKong()
 
 	assert.Nil(t, err)
 
-	apis, err := kong.Apis().List(&data.ApiRequestParams{})
+	apis, err := kongApi.Apis().List(&data.ApiRequestParams{})
 
 	assert.Nil(t, err)
 	assert.NotEqual(t, len(apis.Data), 0)
 }
 
 func TestApisRetrieve(t *testing.T) {
-	c := config()
-
-	kong, err := NewKong(c.GetString("host"), c)
+	kongApi, err := getKong()
 
 	assert.Nil(t, err)
 
-	api, err := kong.Apis().Retrieve(&data.ApiRequestParams{Name: testApiObject.Name})
+	api, err := kongApi.Apis().Retrieve(&data.ApiRequestParams{Name: testApiObject.Name})
 
 	assert.Nil(t, err)
 	assert.NotEqual(t, api.ID, "")
@@ -84,9 +95,7 @@ func TestApisRetrieve(t *testing.T) {
 }
 
 func TestApisUpdate(t *testing.T) {
-	c := config()
-
-	kong, err := NewKong(c.GetString("host"), c)
+	kongApi, err := getKong()
 
 	assert.Nil(t, err)
 
@@ -97,7 +106,7 @@ func TestApisUpdate(t *testing.T) {
 		UpstreamUrl: "https://google.com/updated",
 	}
 
-	api, err := kong.Apis().Update(&data.ApiRequestParams{Name: testApiObject.Name}, updatedData)
+	api, err := kongApi.Apis().Update(&data.ApiRequestParams{Name: testApiObject.Name}, updatedData)
 
 	assert.Nil(t, err)
 	assert.NotEqual(t, api.ID, "")
@@ -105,25 +114,21 @@ func TestApisUpdate(t *testing.T) {
 }
 
 func TestApisDelete(t *testing.T) {
-	c := config()
-
-	kong, err := NewKong(c.GetString("host"), c)
+	kongApi, err := getKong()
 
 	assert.Nil(t, err)
 
-	err = kong.Apis().Delete(&data.ApiRequestParams{Name: testApiObject.Name})
+	err = kongApi.Apis().Delete(&data.ApiRequestParams{Name: testApiObject.Name})
 
 	assert.Nil(t, err)
 }
 
 // func TestPluginsList(t *testing.T) {
-//  c := config()
-
-//  kong, err := NewKong(c.GetString("host"), c)
+// kongApi, err := getKong()
 
 //  assert.Nil(t, err)
 
-//  plugins, err := kong.Plugins().List(&data.PluginRequestParams{})
+//  plugins, err := kongApi.Plugins().List(&data.PluginRequestParams{})
 
 //  assert.Nil(t, err)
 //  assert.NotEqual(t, len(plugins.Data), 0)

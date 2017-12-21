@@ -1,4 +1,4 @@
-package kongctl
+package main
 
 import (
 	"fmt"

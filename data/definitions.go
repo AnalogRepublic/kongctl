@@ -100,23 +100,53 @@ func (p *ServiceDefinition) PluginsIndexed() (map[interface{}]interface{}, error
 // for each of the resources.
 func (p *ServiceDefinition) Diff(other ServiceDefinition) (ServiceDefinitionDiff, error) {
 	var err error
-	var diff ServiceDefinitionDiff
+	var apiDiff util.MapDiff
+	var pluginDiff util.MapDiff
 
-	aApis, err := p.ApisIndexed()
+	if apiDiff, err = p.diffApis(other); err != nil {
+		return ServiceDefinitionDiff{}, err
+	}
 
-	if err != nil {
+	if pluginDiff, err = p.diffPlugins(other); err != nil {
+		return ServiceDefinitionDiff{}, err
+	}
+
+	return ServiceDefinitionDiff{
+		Apis:    apiDiff,
+		Plugins: pluginDiff,
+	}, nil
+}
+
+func (p *ServiceDefinition) diffApis(other ServiceDefinition) (util.MapDiff, error) {
+	var err error
+	var diff util.MapDiff
+	var a map[interface{}]interface{}
+	var b map[interface{}]interface{}
+
+	if a, err = p.ApisIndexed(); err != nil {
 		return diff, errors.Wrap(err, "Unable to index list of apis in yaml")
 	}
 
-	bApis, err := other.ApisIndexed()
-
-	if err != nil {
+	if b, err = other.ApisIndexed(); err != nil {
 		return diff, errors.Wrap(err, "Unable to index list of apis in Kong")
 	}
 
-	diff = ServiceDefinitionDiff{
-		Apis: *util.DiffMapsKeys(aApis, bApis),
+	return *util.DiffMapsKeys(a, b), nil
+}
+
+func (p *ServiceDefinition) diffPlugins(other ServiceDefinition) (util.MapDiff, error) {
+	var err error
+	var diff util.MapDiff
+	var a map[interface{}]interface{}
+	var b map[interface{}]interface{}
+
+	if a, err = p.PluginsIndexed(); err != nil {
+		return diff, errors.Wrap(err, "Unable to index list of plugins in yaml")
 	}
 
-	return diff, nil
+	if b, err = other.PluginsIndexed(); err != nil {
+		return diff, errors.Wrap(err, "Unable to index list of plugins in Kong")
+	}
+
+	return *util.DiffMapsKeys(a, b), nil
 }

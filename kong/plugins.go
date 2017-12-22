@@ -20,6 +20,13 @@ type PluginHandler struct {
 	Kong   *Kong
 }
 
+// PluginApiError should represent the error
+// responses we may get back from Kong
+type PluginApiError struct {
+	ConfigPath      string `json:"config.path,omitempty"`
+	ConfigWhitelist string `json:"config.whitelist,omitempty"`
+}
+
 // List will make a GET request with our request params and
 // return a PluginList which contains the number of plugins,
 // a list of the plugins fetched and a reference to the next page.
@@ -66,13 +73,25 @@ func (ph *PluginHandler) Add(plugin *data.Plugin) (*data.Plugin, error) {
 	// If we're only applying it to an api, use the apis
 	// plugin endpoint
 	if plugin.ApiID != "" && plugin.ConsumerID == "" {
-		path = fmt.Sprintf("%s/%s/%s", apisRootPath, plugin.ApiID, path)
+		path = fmt.Sprintf("%s/%s%s", apisRootPath, plugin.ApiID, path)
+
+		// We need to reset the ApiID so that we don't
+		// send it in the json request body
+		plugin.ApiID = ""
 	}
 
-	_, err := ph.Kong.Client.Post(path).BodyJSON(plugin).ReceiveSuccess(respPlugin)
+	pluginError := &PluginApiError{}
+
+	_, err := ph.Kong.Client.Post(path).BodyJSON(plugin).Receive(respPlugin, pluginError)
 
 	if err != nil {
-		return respPlugin, err
+		return &data.Plugin{}, err
+	}
+
+	fmt.Println(pluginError)
+
+	if (PluginApiError{}) != *pluginError {
+		return &data.Plugin{}, errors.New("Encountered an error when making the request")
 	}
 
 	return respPlugin, nil

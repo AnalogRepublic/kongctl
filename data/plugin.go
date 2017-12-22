@@ -5,13 +5,14 @@ import "errors"
 // Plugin represent the Plugin object we'll
 // get back from the Kong API whenever we make a request.
 type Plugin struct {
-	ID         string      `json:"id,omitempty" yaml:"-"`
-	Name       string      `json:"name,omitempty" yaml:"name,omitempty"`
-	ApiID      string      `json:"api_id,omitempty" yaml:"api_id,omitempty"`
-	ConsumerID string      `json:"consumer_id,omitempty" yaml:"consumer_id,omitempty"`
-	Config     interface{} `json:"config,omitempty" yaml:"config,omitempty"`
-	Enabled    bool        `json:"enabled" yaml:"enabled,omitempty"`
-	CreatedAt  int         `json:"-" yaml:"-"`
+	ID              string `json:"id,omitempty" yaml:"-"`
+	Name            string `json:"name,omitempty" yaml:"name,omitempty"`
+	ApiID           string `json:"api_id,omitempty" yaml:"api_id,omitempty"`
+	ConsumerID      string `json:"consumer_id,omitempty" yaml:"consumer_id,omitempty"`
+	Enabled         bool   `json:"enabled,omitempty" yaml:"enabled,omitempty"`
+	CreatedAt       int    `json:"-" yaml:"-"`
+	ConfigPath      string `json:"config.path,omitempty" yaml:"config.path,omitempty"`
+	ConfigWhitelist string `json:"config.whitelist,omitempty" yaml:"config.whitelist,omitempty"`
 }
 
 // PluginList is an object which represents the

@@ -22,3 +22,6 @@ apis:
 plugins:
   - name: acl
     api_id: Endpoint-1
+    config.whitelist: testing, another
+  - name: file-log
+    config.path: testing.log

@@ -53,8 +53,6 @@ func applyCommand(c *cli.Context) error {
 		return cli.NewExitError(err, 1)
 	}
 
-	fmt.Println(diff)
-
 	// Apply the diff
 	applyAdditions(diff)
 	applyUpdates(diff)

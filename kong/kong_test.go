@@ -113,6 +113,35 @@ func TestApisUpdate(t *testing.T) {
 	assert.Equal(t, api.UpstreamUrl, updatedData.UpstreamUrl)
 }
 
+func TestPluginsAdd(t *testing.T) {
+	kongApi, err := getKong()
+
+	assert.Nil(t, err)
+
+	newPlugin := &data.Plugin{
+		ApiID:      testApiObject.ID,
+		Name:       "file-log",
+		ConfigPath: "testing.log",
+	}
+
+	plugin, err := kongApi.Plugins().Add(newPlugin)
+
+	assert.Nil(t, err)
+	assert.NotEqual(t, plugin.ID, "", "We should have an ID if the add was successful")
+	assert.Equal(t, newPlugin.Name, plugin.Name, "The name of the plugin we add should be the same as the one we get back")
+}
+
+func TestPluginsList(t *testing.T) {
+	kongApi, err := getKong()
+
+	assert.Nil(t, err)
+
+	plugins, err := kongApi.Plugins().List(&data.PluginRequestParams{})
+
+	assert.Nil(t, err)
+	assert.NotEqual(t, len(plugins.Data), 0, "We should get atleast 1 plugin back")
+}
+
 func TestApisDelete(t *testing.T) {
 	kongApi, err := getKong()
 
@@ -122,14 +151,3 @@ func TestApisDelete(t *testing.T) {
 
 	assert.Nil(t, err)
 }
-
-// func TestPluginsList(t *testing.T) {
-// kongApi, err := getKong()
-
-//  assert.Nil(t, err)
-
-//  plugins, err := kongApi.Plugins().List(&data.PluginRequestParams{})
-
-//  assert.Nil(t, err)
-//  assert.NotEqual(t, len(plugins.Data), 0)
-// }

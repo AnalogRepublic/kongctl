@@ -25,6 +25,10 @@ type Kong struct {
 	Host   string
 }
 
+type ApiError struct {
+	Message string `json:"message"`
+}
+
 // NewKong should return a new instance of Kong which we
 // can use to interact with the API of the service.
 func NewKong(host string, c *config.Config) (*Kong, error) {

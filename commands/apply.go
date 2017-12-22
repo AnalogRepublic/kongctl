@@ -72,11 +72,13 @@ func applyUpdates(diff data.ServiceDefinitionDiff) error {
 		result, err := kongApi.Apis().Update(&data.ApiRequestParams{Name: apiUpdate.Name}, &apiUpdate)
 
 		if err != nil {
-			return cli.NewExitError(err, 1)
+			fmt.Printf("Failed updating api endpoint %s because of: %s\n", apiUpdate.Name, err)
+			continue
 		}
 
 		if result.ID == "" {
-			return cli.NewExitError(errors.New(fmt.Sprintf("Failed updating api endpoint %s", apiUpdate.Name)), 1)
+			fmt.Printf("Failed updating api endpoint %s\n", apiUpdate.Name)
+			continue
 		}
 	}
 
@@ -133,7 +135,8 @@ func applyDeletions(diff data.ServiceDefinitionDiff) error {
 		err := kongApi.Apis().Delete(&data.ApiRequestParams{Name: apiDeletion.Name})
 
 		if err != nil {
-			return cli.NewExitError(errors.New(fmt.Sprintf("Failed removing api endpoint %s", apiDeletion.Name)), 1)
+			fmt.Printf("Failed removing api endpoint %s because of: %s\n", apiDeletion.Name, err)
+			continue
 		}
 	}
 

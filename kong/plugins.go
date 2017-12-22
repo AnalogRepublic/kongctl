@@ -88,8 +88,6 @@ func (ph *PluginHandler) Add(plugin *data.Plugin) (*data.Plugin, error) {
 		return &data.Plugin{}, err
 	}
 
-	fmt.Println(pluginError)
-
 	if (PluginApiError{}) != *pluginError {
 		return &data.Plugin{}, errors.New("Encountered an error when making the request")
 	}

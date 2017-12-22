@@ -93,11 +93,13 @@ func applyAdditions(diff data.ServiceDefinitionDiff) error {
 		result, err := kongApi.Apis().Add(&apiAddition)
 
 		if err != nil {
-			return cli.NewExitError(err, 1)
+			fmt.Printf("Failed creating api endpoint %s because of: %s\n", apiAddition.Name, err)
+			continue
 		}
 
 		if result.ID == "" {
-			return cli.NewExitError(errors.New(fmt.Sprintf("Failed creating api endpoint %s", apiAddition.Name)), 1)
+			fmt.Printf("Failed creating api endpoint %s\n", apiAddition.Name)
+			continue
 		}
 	}
 
@@ -110,11 +112,13 @@ func applyAdditions(diff data.ServiceDefinitionDiff) error {
 		result, err := kongApi.Plugins().Add(&pluginAddition)
 
 		if err != nil {
-			return cli.NewExitError(err, 1)
+			fmt.Printf("Failed creating plugin %s because of: %s\n", pluginAddition.Name, err)
+			continue
 		}
 
 		if result.ID == "" {
-			return cli.NewExitError(errors.New(fmt.Sprintf("Failed creating plugin endpoint %s", pluginAddition.Name)), 1)
+			fmt.Printf("Failed creating plugin %s\n", pluginAddition.Name)
+			continue
 		}
 	}
 
